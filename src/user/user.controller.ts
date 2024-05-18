@@ -1,16 +1,20 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  Param,
   Post,
+  Put,
   Query,
-  Request,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FindAllUserDto } from './dto/find-all-user.dto';
 import { UserService } from './user.service';
-import { FindAllUser } from './dto/find-all-user.dto';
+import { DetailUserDto } from './dto/detail-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -29,10 +33,47 @@ export class UserController {
 
   @Get()
   @HttpCode(200)
-  async findAll(
-    @Request() request: any,
-    @Query() query: FindAllUser,
+  async findAll(@Query() query: FindAllUserDto): Promise<object> {
+    return await this.userService.findAll(query);
+  }
+
+  @Get('/detail')
+  @HttpCode(200)
+  async getDetail(@Query() query: DetailUserDto): Promise<object> {
+    return await this.userService.getDetail(query);
+  }
+
+  @Put(':id')
+  @HttpCode(200)
+  @ApiParam({
+    name: 'id',
+    example: 1,
+    required: true,
+    description:
+      'The id of the user to update specific user, support Int and String',
+    type: 'string' || 'integer',
+    schema: { oneOf: [{ type: 'string' }, { type: 'integer' }] },
+  })
+  async update(
+    @Param('id') id: number | string,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<object> {
-    return await this.userService.findAll(request, query);
+    console.log('id:', id);
+    console.log('updateUserDto:', updateUserDto);
+    return await this.userService.update(id, updateUserDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(200)
+  @ApiParam({
+    name: 'id',
+    example: 1,
+    required: true,
+    description: 'The id of the user to delete, support Int and String',
+    type: 'string' || 'integer',
+    schema: { oneOf: [{ type: 'string' }, { type: 'integer' }] },
+  })
+  async delete(@Param('id') id: number | string): Promise<object> {
+    return await this.userService.delete(id);
   }
 }

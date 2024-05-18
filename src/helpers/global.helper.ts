@@ -18,6 +18,7 @@ export class GlobalHelper {
     totalPages: number,
     totalItems: number,
     customParam: any,
+    orderBy?: string,
   ): object {
     return {
       first: `${process.env.BASE_URL}/${serviceName}?limit=${limit}&page=1${
@@ -52,6 +53,7 @@ export class GlobalHelper {
       nextPage: page < totalPages ? page + 1 : null,
       previousPage: page > 1 ? page - 1 : null,
       lastPage: totalPages,
+      orderBy,
     };
   }
 }

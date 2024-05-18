@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class FindAllUser {
+export class FindAllUserDto {
   @ApiProperty({
-    example: '',
+    example: 'first_name asc',
     required: false,
   })
   @IsOptional()
-  @IsString({ message: 'keyword harus berupa string' })
-  keyword: string;
+  @IsString({ message: 'order by must be string' })
+  orderBy: string;
 
   @ApiProperty({
     example: 1,
